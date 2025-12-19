@@ -19,4 +19,4 @@ app.UseHttpsRedirection();
 // Register all API endpoints under /api
 app.MapApiEndpoints();
 
-app.Run();
+await app.RunAsync();

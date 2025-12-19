@@ -11,7 +11,5 @@ internal static class ApiEndpoints
 
         // Register all entity groups under /api
         apiGroup.MapCourtEndpoints();
-        // Future: apiGroup.MapPlayerEndpoints();
-        // Future: apiGroup.MapBookingEndpoints();
     }
 }

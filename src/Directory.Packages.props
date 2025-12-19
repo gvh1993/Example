@@ -5,5 +5,6 @@
 	
 	<ItemGroup>
         <PackageVersion Include="Microsoft.AspNetCore.OpenApi" Version="10.0.1" />
+		<PackageVersion Include="SonarAnalyzer.CSharp" Version="10.17.0.131074" />
     </ItemGroup>
 </Project>

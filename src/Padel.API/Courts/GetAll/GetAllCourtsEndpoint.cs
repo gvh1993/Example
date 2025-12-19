@@ -11,7 +11,7 @@ internal static class GetAllCourtsEndpoint
 
         group.MapGet("/", () =>
         {
-            return courts;          
+            return courts;
         }).WithName("GetAllCourts");
     }
 }
