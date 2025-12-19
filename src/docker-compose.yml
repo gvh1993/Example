@@ -1,0 +1,6 @@
+services:
+  padel.api:
+    image: ${DOCKER_REGISTRY-}padelapi
+    build:
+      context: .
+      dockerfile: Padel.API/Dockerfile
