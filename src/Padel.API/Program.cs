@@ -16,7 +16,6 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-// Register all API endpoints under /api
 app.MapApiEndpoints();
 
 await app.RunAsync();
