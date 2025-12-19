@@ -1,3 +1,7 @@
 <Solution>
+  <Folder Name="/Solution items/">
+    <File Path="../README.md" />
+    <File Path=".editorconfig" />
+  </Folder>
   <Project Path="Padel.API/Padel.API.csproj" />
 </Solution>
