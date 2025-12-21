@@ -4,3 +4,29 @@ services:
     build:
       context: .
       dockerfile: Padel.API/Dockerfile
+    ports:
+      - "5000:8080"
+      - "5001:8081"
+    environment:
+      # - OTEL_EXPORTER_OTLP_ENDPOINT=http://padel.seq:5341/ingest/otlp
+      # - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://padel.aspire-dashboard:18889
+      - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
+
+  padel.seq:
+    image: datalust/seq:latest
+    environment:
+      - ACCEPT_EULA=Y
+    volumes:
+      - ./.containers/seq_data:/data
+    ports:
+      - "5341:80"
+      - "8080:80"
+
+  padel.aspire-dashboard:
+    image: mcr.microsoft.com/dotnet/aspire-dashboard:13
+    environment:
+      DOTNET_DASHBOARD_UNSECURED_ALLOW_ANONYMOUS: true
+    ports:
+      - 18888:18888
