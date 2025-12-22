@@ -1,0 +1,76 @@
+﻿using FluentValidation;
+using FluentValidation.Results;
+using Padel.Application.Shared.Errors;
+using Padel.Application.Shared.Messaging;
+using Padel.Domain.Shared;
+
+namespace Padel.Application.Shared.Behaviours;
+
+internal static class ValidationDecorator
+{
+
+#pragma warning disable S1144 // Remove the unused internal class 'CommandHandler'
+    internal sealed class CommandHandler<TCommand, TResponse>(
+        ICommandHandler<TCommand, TResponse> innerHandler,
+        IEnumerable<IValidator<TCommand>> validators)
+        : ICommandHandler<TCommand, TResponse>
+        where TCommand : ICommand<TResponse>
+    {
+        public async Task<Result<TResponse>> Handle(TCommand command, CancellationToken cancellationToken)
+        {
+            var validationFailures = await ValidateAsync(command, validators);
+
+            if (validationFailures.Length == 0)
+            {
+                return await innerHandler.Handle(command, cancellationToken);
+            }
+
+            return Result.Failure<TResponse>(CreateValidationError(validationFailures));
+        }
+    }
+#pragma warning restore S1144
+
+    internal sealed class CommandBaseHandler<TCommand>(
+        ICommandHandler<TCommand> innerHandler,
+        IEnumerable<IValidator<TCommand>> validators)
+        : ICommandHandler<TCommand>
+        where TCommand : ICommand
+    {
+        public async Task<Result> Handle(TCommand command, CancellationToken cancellationToken)
+        {
+            var validationFailures = await ValidateAsync(command, validators);
+
+            if (validationFailures.Length == 0)
+            {
+                return await innerHandler.Handle(command, cancellationToken);
+            }
+
+            return Result.Failure(CreateValidationError(validationFailures));
+        }
+    }
+
+    private static async Task<ValidationFailure[]> ValidateAsync<TCommand>(
+        TCommand command,
+        IEnumerable<IValidator<TCommand>> validators)
+    {
+        if (!validators.Any())
+        {
+            return [];
+        }
+
+        var context = new ValidationContext<TCommand>(command);
+
+        var validationResults = await Task.WhenAll(
+            validators.Select(validator => validator.ValidateAsync(context)));
+
+        var validationFailures = validationResults
+            .Where(validationResult => !validationResult.IsValid)
+            .SelectMany(validationResult => validationResult.Errors)
+            .ToArray();
+
+        return validationFailures;
+    }
+
+    private static ValidationError CreateValidationError(ValidationFailure[] validationFailures) =>
+        new(validationFailures.Select(f => Error.Problem(f.ErrorCode, f.ErrorMessage)).ToArray());
+}

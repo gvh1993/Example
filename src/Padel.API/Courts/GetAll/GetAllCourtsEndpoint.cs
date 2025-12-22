@@ -1,17 +1,23 @@
-﻿namespace Padel.API.Courts.GetAll;
+﻿using Microsoft.AspNetCore.Mvc;
+using Padel.Application.Courts.GetAll;
+using Padel.Application.Shared.Messaging;
+using Padel.Domain.Courts;
+
+namespace Padel.API.Courts.GetAll;
 
 internal static class GetAllCourtsEndpoint
 {
     internal static void MapGetAllCourtsEndpoint(this RouteGroupBuilder group)
     {
-        var courts = new[]
-            {
-            "Court 1", "Court 2", "Court 3", "Court 4", "Court 5", "Court 6", "Court 7", "Court 8", "Court 9", "Court 10"
-        };
-
-        group.MapGet("/", () =>
+        group.MapGet("/", async (
+            [FromServices] IQueryHandler<GetAllCourtsQuery, IReadOnlyCollection<Court>> handler,
+            CancellationToken cancellationToken) =>
         {
-            return courts;
+            var courts = await handler.Handle(new GetAllCourtsQuery(), cancellationToken);
+
+            return courts
+                .Value
+                .Select(c => new GetAllCourtsResponse(c.Id, c.Name));
         }).WithName("GetAllCourts");
     }
 }

@@ -14,10 +14,22 @@ services:
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://padel.aspire-dashboard:18889
       - OTEL_EXPORTER_OTLP_PROTOCOL=grpc
 
+  padel.postgres:
+    image: postgres:latest
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: padel
+    volumes:
+      - ./.containers/postgres_data:/var/lib/postgresql
+    ports:
+      - "5432:5432"
+
   padel.seq:
     image: datalust/seq:latest
     environment:
       - ACCEPT_EULA=Y
+      - SEQ_FIRSTRUN_NOAUTHENTICATION=true
     volumes:
       - ./.containers/seq_data:/data
     ports:

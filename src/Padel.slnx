@@ -9,4 +9,7 @@
     <Build />
   </Project>
   <Project Path="Padel.API/Padel.API.csproj" />
+  <Project Path="Padel.Application/Padel.Application.csproj" Id="554906cd-2ee1-48f5-a226-e7df60329403" />
+  <Project Path="Padel.Domain/Padel.Domain.csproj" Id="93564387-32c3-42dd-b841-94ea6577cfb2" />
+  <Project Path="Padel.Infrastructure/Padel.Infrastructure.csproj" Id="26b9f6e6-a172-4106-8c95-940379ca443c" />
 </Solution>
