@@ -12,7 +12,7 @@ internal sealed class GetAllCourtsQueryHandler : IQueryHandler<GetAllCourtsQuery
 
         for (var i = 0; i < 10; i++)
         {
-            courts.Add(new Court(i, $"Court {i}"));
+            courts.Add(new Court(Guid.CreateVersion7(), $"Court {i}"));
         }
 
         return Task.FromResult(Result.Success<IReadOnlyCollection<Court>>(courts));

@@ -1,4 +1,5 @@
 using System.Globalization;
+using Npgsql;
 using OpenTelemetry.Logs;
 using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
@@ -11,8 +12,6 @@ using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
-// Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
 Log.Logger = new LoggerConfiguration()
@@ -47,7 +46,8 @@ builder.Services.AddOpenTelemetry()
     .ConfigureResource(x => x.AddService(builder.Environment.ApplicationName))
     .WithTracing(tracingBuilder => tracingBuilder
         .AddHttpClientInstrumentation()
-        .AddAspNetCoreInstrumentation())
+        .AddAspNetCoreInstrumentation()
+        .AddNpgsql())
     .WithMetrics(metricsBuilder => metricsBuilder
         .AddAspNetCoreInstrumentation()
         .AddHttpClientInstrumentation()
@@ -78,11 +78,12 @@ var app = builder.Build();
 
 app.UseSerilogRequestLogging();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
 }
+
+app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
 
