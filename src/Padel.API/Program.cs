@@ -1,6 +1,7 @@
 using Padel.API;
 using Padel.Application;
 using Padel.Infrastructure;
+using Padel.Infrastructure.Environment;
 using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -27,6 +28,8 @@ if (app.Environment.IsDevelopment())
 app.MapHealthChecks("/health");
 
 app.UseHttpsRedirection();
+
+await app.UseInfrastructure(app.Environment);
 
 app.MapApiEndpoints();
 
