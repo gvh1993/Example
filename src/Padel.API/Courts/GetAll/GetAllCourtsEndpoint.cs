@@ -6,7 +6,7 @@ namespace Padel.API.Courts.GetAll;
 
 internal static class GetAllCourtsEndpoint
 {
-    internal static void MapGetAllCourtsEndpoint(this RouteGroupBuilder group)
+    internal static RouteGroupBuilder MapGetAllCourtsEndpoint(this RouteGroupBuilder group)
     {
         group.MapGet("/", async (
             [FromServices] IQueryHandler<GetAllCourtsQuery, IReadOnlyCollection<GetAllCourtsItem>> handler,
@@ -14,9 +14,11 @@ internal static class GetAllCourtsEndpoint
         {
             var courts = await handler.Handle(new GetAllCourtsQuery(), cancellationToken);
 
-            return courts
+            return Results.Ok(courts
                 .Value
-                .Select(c => new GetAllCourtsResponse(c.Id, c.Name));
+                .Select(c => new GetAllCourtsResponse(c.Id, c.Name)));
         }).WithName("GetAllCourts");
+
+        return group;
     }
 }
