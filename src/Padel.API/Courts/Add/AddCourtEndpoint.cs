@@ -20,23 +20,13 @@ internal static class AddCourtEndpoint
         {
             var courtResult = await handler.Handle(new AddCourtCommand(request.Name), cancellationToken);
 
-            if (courtResult is { IsFailure: true, Error.Type: ErrorType.Validation })
+            return courtResult switch
             {
-                return Results.BadRequest(courtResult.Error);
-            }
-
-            if (courtResult is { IsFailure: true, Error.Type: ErrorType.Conflict })
-            {
-                return Results.Conflict();
-            }
-
-            return Results.CreatedAtRoute(
-                GetCourtEndpoint.EndpointName,
-                new { id = courtResult.Value.Id },
-                new AddCourtResponse(
-                    courtResult.Value.Id,
-                    courtResult.Value.Name));
-
+                { IsFailure: true, Error.Type: ErrorType.Validation } => Results.BadRequest(courtResult.Error),
+                { IsFailure: true, Error.Type: ErrorType.Conflict } => Results.Conflict(),
+                _ => Results.CreatedAtRoute(GetCourtEndpoint.EndpointName, new { id = courtResult.Value.Id },
+                    new AddCourtResponse(courtResult.Value.Id, courtResult.Value.Name))
+            };
         }).WithName(EndpointName);
 
         return group;

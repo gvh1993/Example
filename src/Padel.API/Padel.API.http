@@ -13,5 +13,13 @@ Accept: application/json
 POST {{Padel.API_HostAddress}}/api/courts/
 Content-Type: application/json
 {
-  "name": "Court 11"
+  "name": "Court 15"
+}
+
+###
+
+PUT {{Padel.API_HostAddress}}/api/courts/019b4ffe-d109-7fab-ad9c-1b4c61198103
+Content-Type: application/json
+{
+  "name": "Updated Court Name"
 }
