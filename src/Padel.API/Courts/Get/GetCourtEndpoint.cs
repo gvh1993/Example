@@ -6,6 +6,8 @@ namespace Padel.API.Courts.Get;
 
 internal static class GetCourtEndpoint
 {
+    internal const string EndpointName = "GetCourt";
+
     internal static RouteGroupBuilder MapGetCourtEndpoint(this RouteGroupBuilder group)
     {
         group.MapGet("/{id:guid}", async (
@@ -19,7 +21,7 @@ internal static class GetCourtEndpoint
                 ? Results.NotFound()
                 : Results.Ok(new GetCourtResponse(court.Value.Id, court.Value.Name));
 
-        }).WithName("GetCourt");
+        }).WithName(EndpointName);
 
         return group;
     }

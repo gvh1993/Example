@@ -4,3 +4,14 @@ GET {{Padel.API_HostAddress}}/api/courts/
 Accept: application/json
 
 ###
+
+GET {{Padel.API_HostAddress}}/api/courts/019b5074-6af0-7573-9fde-8f7a6f60c467
+Accept: application/json
+
+###
+
+POST {{Padel.API_HostAddress}}/api/courts/
+Content-Type: application/json
+{
+  "name": "Court 11"
+}

@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Padel.Application.Courts;
+using Padel.Domain.Courts;
 using Padel.Infrastructure.Data.Courts;
 
 namespace Padel.Infrastructure.Data;
@@ -22,8 +23,8 @@ internal static class ServiceCollectionExtensions
             services.AddHealthChecks()
                 .AddNpgSql(padelConnectionString);
 
-            services.AddScoped<ICourtsQueryService, CourtsQueryService>();
-
+            services.AddScoped<ICourtQueryService, CourtQueryService>();
+            services.AddScoped<ICourtRepository, CourtRepository>();
             return services;
         }
     }

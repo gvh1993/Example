@@ -1,4 +1,5 @@
-﻿using Padel.API.Courts.Get;
+﻿using Padel.API.Courts.Add;
+using Padel.API.Courts.Get;
 using Padel.API.Courts.GetAll;
 
 namespace Padel.API.Courts;
@@ -15,6 +16,7 @@ internal static class CourtsEndpoints
 
         courtsGroup
             .MapGetCourtEndpoint()
-            .MapGetAllCourtsEndpoint();
+            .MapGetAllCourtsEndpoint()
+            .MapAddCourtEndpoint();
     }
 }

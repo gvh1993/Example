@@ -3,7 +3,7 @@ using Padel.Domain.Shared;
 
 namespace Padel.Application.Courts.Get;
 
-internal sealed class GetCourtQueryHandler(ICourtsQueryService courtQueryService) : IQueryHandler<GetCourtQuery, GetCourtItem>
+internal sealed class GetCourtQueryHandler(ICourtQueryService courtQueryService) : IQueryHandler<GetCourtQuery, GetCourtItem>
 {
     public async Task<Result<GetCourtItem>> Handle(GetCourtQuery query, CancellationToken cancellationToken)
     {

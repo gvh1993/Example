@@ -5,8 +5,16 @@ using Padel.Application.Courts.Get;
 
 namespace Padel.Infrastructure.Data.Courts;
 
-internal sealed class CourtsQueryService(PadelDbContext context) : ICourtsQueryService
+internal sealed class CourtQueryService(PadelDbContext context) : ICourtQueryService
 {
+    public Task<bool> CourtExistsAsync(string name, CancellationToken cancellationToken)
+    {
+        return context
+            .Courts
+            .AsNoTracking()
+            .AnyAsync(x => x.Name == name, cancellationToken);
+    }
+
     public Task<GetCourtItem?> FindCourtAsync(Guid id, CancellationToken cancellationToken)
     {
         return context
