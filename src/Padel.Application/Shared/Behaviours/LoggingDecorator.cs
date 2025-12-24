@@ -17,13 +17,19 @@ internal static class LoggingDecorator
         {
             var commandName = typeof(TCommand).Name;
 
-            logger.LogInformation("Processing command {Command}", commandName);
+            using (LogContext.PushProperty("Command", command, true))
+            {
+                logger.LogInformation("Processing command {CommandName}", commandName);
+            }
 
             var result = await innerHandler.Handle(command, cancellationToken);
 
             if (result.IsSuccess)
             {
-                logger.LogInformation("Completed command {Command}", commandName);
+                using (LogContext.PushProperty("Result", result, true))
+                {
+                    logger.LogInformation("Completed command {CommandName}", commandName);
+                }
             }
             else
             {
@@ -47,19 +53,25 @@ internal static class LoggingDecorator
         {
             var commandName = typeof(TCommand).Name;
 
-            logger.LogInformation("Processing command {Command}", commandName);
+            using (LogContext.PushProperty("Command", command, true))
+            {
+                logger.LogInformation("Processing command {CommandName}", commandName);
+            }
 
             var result = await innerHandler.Handle(command, cancellationToken);
 
             if (result.IsSuccess)
             {
-                logger.LogInformation("Completed command {Command}", commandName);
+                using (LogContext.PushProperty("Result", result, true))
+                {
+                    logger.LogInformation("Completed command {CommandName}", commandName);
+                }
             }
             else
             {
                 using (LogContext.PushProperty("Error", result.Error, true))
                 {
-                    logger.LogError("Completed command {Command} with error", commandName);
+                    logger.LogError("Completed command {CommandName} with error", commandName);
                 }
             }
 
@@ -77,19 +89,25 @@ internal static class LoggingDecorator
         {
             var queryName = typeof(TQuery).Name;
 
-            logger.LogInformation("Processing query {Query}", queryName);
+            using (LogContext.PushProperty("Query", query, true))
+            {
+                logger.LogInformation("Processing query {QueryName}", queryName);
+            }
 
             var result = await innerHandler.Handle(query, cancellationToken);
 
             if (result.IsSuccess)
             {
-                logger.LogInformation("Completed query {Query}", queryName);
+                using (LogContext.PushProperty("Result", result, true))
+                {
+                    logger.LogInformation("Completed query {QueryName}", queryName);
+                }
             }
             else
             {
                 using (LogContext.PushProperty("Error", result.Error, true))
                 {
-                    logger.LogError("Completed query {Query} with error", queryName);
+                    logger.LogError("Completed query {QueryName} with error", queryName);
                 }
             }
 
