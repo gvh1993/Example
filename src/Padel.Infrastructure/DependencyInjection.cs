@@ -11,6 +11,7 @@ using OpenTelemetry.Metrics;
 using OpenTelemetry.Resources;
 using OpenTelemetry.Trace;
 using Padel.Infrastructure.Data;
+using Padel.Infrastructure.Monitoring;
 using Serilog;
 using Serilog.Events;
 
@@ -35,7 +36,7 @@ public static class DependencyInjection
         public IServiceCollection AddData(IConfiguration configuration)
         {
             var padelConnectionString = configuration.GetConnectionString("Padel")
-                                        ?? throw new NullReferenceException(message: "The Padel database connectionstring should not be null");
+                                        ?? throw new InvalidOperationException("The Padel database connectionstring should not be null");
 
             services.AddDbContext<PadelDbContext>(x => x
                 .UseNpgsql(padelConnectionString, y => y.EnableRetryOnFailure()));
@@ -52,6 +53,10 @@ public static class DependencyInjection
             IHostEnvironment environment,
             ILoggingBuilder loggingBuilder)
         {
+            var openTelemetryOptions = new OpenTelemetryOptions();
+            configuration.GetSection(OpenTelemetryOptions.OpenTelemetryConfigSection)
+                .Bind(openTelemetryOptions);
+
             Log.Logger = new LoggerConfiguration()
                 .ReadFrom.Configuration(configuration)
                 .Enrich.FromLogContext()
@@ -66,7 +71,7 @@ public static class DependencyInjection
                 .WriteTo.Seq(serverUrl: configuration.GetValue<string>("Seq:Url")!, formatProvider: new CultureInfo("en-US"))
                 .WriteTo.OpenTelemetry(options =>
                 {
-                    options.Endpoint = configuration.GetValue<string>("OpenTelemetry:LogsEndpoint");
+                    options.Endpoint = openTelemetryOptions.LogsEndpoint.AbsoluteUri;
                     options.Protocol = Serilog.Sinks.OpenTelemetry.OtlpProtocol.Grpc;
                     options.Headers = configuration.GetSection("OpenTelemetry:Headers").Get<Dictionary<string, string>>() ?? new Dictionary<string, string>();
                     options.ResourceAttributes = new Dictionary<string, object>
@@ -85,15 +90,23 @@ public static class DependencyInjection
                 .WithTracing(tracingBuilder => tracingBuilder
                     .AddHttpClientInstrumentation()
                     .AddAspNetCoreInstrumentation()
-                    .AddNpgsql())
+                    .AddNpgsql()
+                    .AddOtlpExporter(otlpOptions =>
+                    {
+                        otlpOptions.Endpoint = openTelemetryOptions.TracesEndpoint;
+                    }))
                 .WithMetrics(metricsBuilder => metricsBuilder
                     .AddAspNetCoreInstrumentation()
                     .AddHttpClientInstrumentation()
-                    .AddRuntimeInstrumentation())
+                    .AddRuntimeInstrumentation()
+                    .AddOtlpExporter(otlpOptions =>
+                    {
+                        otlpOptions.Endpoint = openTelemetryOptions.MetricsEndpoint;
+                    }))
                 .WithLogging(loggingBuilder => loggingBuilder
                         .AddOtlpExporter(otlpOptions =>
                         {
-                            otlpOptions.Endpoint = new Uri(configuration.GetValue<string>("OpenTelemetry:LogsEndpoint")!);
+                            otlpOptions.Endpoint = openTelemetryOptions.LogsEndpoint;
                         }),
                     options =>
                     {
