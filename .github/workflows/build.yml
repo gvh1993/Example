@@ -1,4 +1,4 @@
-name: Build
+﻿name: Build
 
 on:
   workflow_dispatch:
@@ -25,11 +25,11 @@ jobs:
       - name: Restore dependencies
         run: dotnet restore ./src/Padel.slnx
 
-      - name: Build
+      - name: Build 🏗️
         run: dotnet build ./src/Padel.slnx --no-restore --configuration Release
 
-      - name: Test
-        run: dotnet test ./src/Padel.slnx --no-build --configuration Release --verbosity normal
+      - name: Unit Test 🧪
+        run: dotnet test ./src/Padel.slnx --no-build --configuration Release --verbosity normal --filter "FullyQualifiedName~Tests.Unit"
 
-      - name: Publish
+      - name: Publish 🚀
         run: dotnet publish ./src/Padel.slnx --no-build --configuration Release --output ./publish

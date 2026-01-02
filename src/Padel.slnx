@@ -6,7 +6,7 @@
     <File Path="../README.md" />
   </Folder>
   <Folder Name="/tests/">
-    <Project Path="../tests/Padel.Domain.Unit/Padel.Domain.Unit.csproj" Id="7679b8da-b964-4460-b313-a3c77e7cec54" />
+    <Project Path="../tests/Padel.Domain.Tests.Unit/Padel.Domain.Tests.Unit.csproj" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />

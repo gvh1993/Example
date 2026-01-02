@@ -14,7 +14,7 @@
 
 	<ItemGroup>
 		<Using Include="Xunit" />
-		<Using Include="Shouldy"/>
+		<Using Include="Shouldly"/>
 	</ItemGroup>
 
 </Project>
