@@ -23,3 +23,7 @@ Content-Type: application/json
 {
   "name": "Updated Court Name"
 }
+
+###
+
+DELETE {{Padel.API_HostAddress}}/api/courts/019b50c7-4075-7f87-90a7-a15bb9750bfc

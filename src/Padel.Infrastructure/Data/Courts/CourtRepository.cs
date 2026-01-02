@@ -23,4 +23,10 @@ internal sealed class CourtRepository(PadelDbContext dbContext) : ICourtReposito
         dbContext.Courts.Add(court);
         await dbContext.SaveChangesAsync(cancellationToken);
     }
+
+    public async Task DeleteAsync(Court court, CancellationToken cancellationToken)
+    {
+        dbContext.Courts.Remove(court);
+        await dbContext.SaveChangesAsync(cancellationToken);
+    }
 }

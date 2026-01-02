@@ -1,4 +1,5 @@
 ﻿using Padel.API.Courts.Add;
+using Padel.API.Courts.Delete;
 using Padel.API.Courts.Get;
 using Padel.API.Courts.GetAll;
 using Padel.API.Courts.Update;
@@ -19,6 +20,7 @@ internal static class CourtsEndpoints
             .MapGetCourtEndpoint()
             .MapGetAllCourtsEndpoint()
             .MapAddCourtEndpoint()
-            .MapUpdateCourtEndpoint();
+            .MapUpdateCourtEndpoint()
+            .MapDeleteCourtEndpoint();
     }
 }
