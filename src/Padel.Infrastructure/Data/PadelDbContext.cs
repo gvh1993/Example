@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Padel.Domain.Courts;
+using Padel.Domain.Player;
 
 namespace Padel.Infrastructure.Data;
 
@@ -13,4 +14,5 @@ public sealed class PadelDbContext(DbContextOptions<PadelDbContext> options) : D
     }
 
     public DbSet<Court> Courts => Set<Court>();
+    public DbSet<Player> Players => Set<Player>();
 }

@@ -7,7 +7,7 @@ using Padel.Infrastructure.Data.Courts;
 
 namespace Padel.Infrastructure.Data;
 
-internal static class ServiceCollectionExtensions
+public static class ServiceCollectionExtensions
 {
     extension(IServiceCollection services)
     {
