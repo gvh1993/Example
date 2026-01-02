@@ -11,7 +11,7 @@ internal sealed class GetCourtQueryHandler(ICourtQueryService courtQueryService)
 
         if (courtItem is null)
         {
-            return Result<GetCourtItem>.ValidationFailure(GetCourtItemErrors.NotFound);
+            return Result.Failure<GetCourtItem>(GetCourtItemErrors.NotFound);
         }
 
         return courtItem;

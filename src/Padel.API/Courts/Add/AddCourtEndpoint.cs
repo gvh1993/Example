@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Padel.API.Courts.Get;
+using Padel.Api;
 using Padel.Application.Courts.Add;
 using Padel.Application.Shared.Messaging;
 using Padel.Domain.Courts;
@@ -20,13 +20,7 @@ internal static class AddCourtEndpoint
         {
             var courtResult = await handler.Handle(new AddCourtCommand(request.Name), cancellationToken);
 
-            return courtResult switch
-            {
-                { IsFailure: true, Error.Type: ErrorType.Validation } => Results.BadRequest(courtResult.Error),
-                { IsFailure: true, Error.Type: ErrorType.Conflict } => Results.Conflict(),
-                _ => Results.CreatedAtRoute(GetCourtEndpoint.EndpointName, new { id = courtResult.Value.Id },
-                    new AddCourtResponse(courtResult.Value.Id, courtResult.Value.Name))
-            };
+            return courtResult.Match(Results.Ok, CustomResults.Problem);
         }).WithName(EndpointName);
 
         return group;

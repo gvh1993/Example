@@ -8,6 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
+
 builder.Services
     .AddInfrastructure(
         builder.Configuration,
@@ -19,6 +22,8 @@ builder.Services
 var app = builder.Build();
 
 app.UseSerilogRequestLogging();
+
+app.UseExceptionHandler();
 
 if (app.Environment.IsDevelopment())
 {

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Padel.Api;
 using Padel.Application.Courts.Delete;
 using Padel.Application.Shared.Messaging;
 using Padel.Domain.Shared;
@@ -18,11 +19,7 @@ internal static class DeleteCourtEndpoint
         {
             var courtResult = await handler.Handle(new DeleteCourtCommand(id), cancellationToken);
 
-            return courtResult switch
-            {
-                { IsFailure: true, Error.Type: ErrorType.NotFound } => Results.NotFound(),
-                _ => Results.NoContent()
-            };
+            return courtResult.Match(Results.NoContent, CustomResults.Problem);
         }).WithName(EndpointName);
 
         return group;

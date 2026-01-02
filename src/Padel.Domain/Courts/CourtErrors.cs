@@ -8,9 +8,7 @@ public static class CourtErrors
         $"{nameof(Court)}.{nameof(NotFound)}",
         "Court could not be found.");
 
-
-    public static Error AlreadyExists => new(
+    public static Error AlreadyExists => Error.Conflict(
         $"{nameof(Court)}.{nameof(AlreadyExists)}",
-        "Court with the same name already exists.",
-        ErrorType.Conflict);
+        "Court with the same name already exists.");
 }

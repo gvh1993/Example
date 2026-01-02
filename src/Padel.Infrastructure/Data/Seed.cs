@@ -38,7 +38,8 @@ internal static class Seed
                         $"{i}",
                         DateTime.UtcNow,
                         EmailAddress.Create($"player{i}@example.com").Value,
-                        PhoneNumber.Create($"123-456-789{i}").Value));
+                        new PhoneNumber($"123456789{i}")
+                    ));
                 }
                 await context.SaveChangesAsync();
             }

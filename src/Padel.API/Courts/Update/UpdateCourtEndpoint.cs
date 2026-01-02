@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Padel.Api;
 using Padel.Application.Courts.Update;
 using Padel.Application.Shared.Messaging;
 using Padel.Domain.Shared;
@@ -19,12 +20,7 @@ internal static class UpdateCourtEndpoint
         {
             var courtResult = await handler.Handle(new UpdateCourtCommand(id, request.Name), cancellationToken);
 
-            return courtResult switch
-            {
-                { IsFailure: true, Error.Type: ErrorType.Validation } => Results.BadRequest(courtResult.Error),
-                { IsFailure: true, Error.Type: ErrorType.Conflict } => Results.Conflict(),
-                _ => Results.NoContent()
-            };
+            return courtResult.Match(Results.NoContent, CustomResults.Problem);
         }).WithName(EndpointName);
 
         return group;

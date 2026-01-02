@@ -2,7 +2,7 @@
 
 namespace Padel.Domain;
 
-public sealed partial class EmailAddress
+public sealed partial record EmailAddress
 {
     public string Value { get; init; }
 

@@ -1,0 +1,1 @@
+dotnet ef database update --project ./Padel.Infrastructure/Padel.Infrastructure.csproj --startup-project ./Padel.Migrations/Padel.Migrations.csproj

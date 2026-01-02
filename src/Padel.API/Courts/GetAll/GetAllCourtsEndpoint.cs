@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Padel.Api;
 using Padel.Application.Courts.GetAll;
 using Padel.Application.Shared.Messaging;
+using Padel.Domain.Shared;
 
 namespace Padel.API.Courts.GetAll;
 
@@ -14,11 +16,9 @@ internal static class GetAllCourtsEndpoint
             [FromServices] IQueryHandler<GetAllCourtsQuery, IReadOnlyCollection<GetAllCourtsItem>> handler,
             CancellationToken cancellationToken) =>
         {
-            var courts = await handler.Handle(new GetAllCourtsQuery(), cancellationToken);
+            var courtResult = await handler.Handle(new GetAllCourtsQuery(), cancellationToken);
 
-            return Results.Ok(courts
-                .Value
-                .Select(c => new GetAllCourtsResponse(c.Id, c.Name)));
+            return courtResult.Match(Results.Ok, CustomResults.Problem);
         }).WithName(EndpointName);
 
         return group;
