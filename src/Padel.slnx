@@ -1,9 +1,12 @@
 <Solution>
   <Folder Name="/Solution items/">
     <File Path="../Directory.Build.props" />
+    <File Path="../Directory.Packages.props" />
     <File Path="../README.md" />
     <File Path=".editorconfig" />
-    <File Path="Directory.Packages.props" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="../tests/Padel.Domain.Unit/Padel.Domain.Unit.csproj" Id="7679b8da-b964-4460-b313-a3c77e7cec54" />
   </Folder>
   <Project Path="docker-compose.dcproj">
     <Build />
